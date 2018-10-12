@@ -55,13 +55,28 @@
         },
         methods: {
             getDirection: function(long, lat) {
+                if(window.innerWidth < 415) {
+                    this.$parent.$emit('open-map');
+
+                    var that = this;
+
+                    setTimeout(function() {
+                        that.appendMap(long, lat);
+                    }, 100);
+                }
+                else {
+                    this.appendMap(long,lat);
+                }
+
+
+            },
+            appendMap(long, lat) {
                 let mapWidth = document.querySelector('.map').clientWidth + 20;
                 let mapHeight = document.querySelector('.map').clientHeight + 20;
 
                 let mapImage = document.querySelector('.map-image');
 
                 mapImage.src = 'https://maps.googleapis.com/maps/api/staticmap?center=' + long + ',' + lat +'&zoom=13&scale=2&size=' + mapWidth + 'x' + mapHeight + '&maptype=roadmap&format=png&visual_refresh=true&markers=size:small%7Ccolor:0xff0000%7Clabel:1%7C' + long + ',' + lat +'&key=AIzaSyDD9OYQwdkwds_OcANaxiy1d_Z8DzAxKmc';
-                this.$emit('test-event');
             },
             triggerEvent: function() {
                 this.$parent.$emit('open-modal', this.index);

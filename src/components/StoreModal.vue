@@ -49,8 +49,6 @@
         methods: {
             showModal: function (store) {
                 this.store = store;
-                console.log(store);
-
                 document.querySelector('.store-modal').classList.add('open');
             },
             closeModal: function() {
@@ -113,5 +111,12 @@
         font-size: 18px;
         right: 5px;
         top: 5px;
+    }
+
+    @media screen and (max-width: 414px) {
+        .store-modal {
+            height: calc(80% - 40px);
+            padding: 20px;
+        }
     }
 </style>

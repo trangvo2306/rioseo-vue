@@ -1,11 +1,15 @@
 <template>
     <div class="store-locator">
-        <div class="store-list">
+        <div class="store-list" v-show="!mapToggle">
             <singleStore v-for="store, index in stores" :storeName=store.name :storeDistance=store.distance :storeAddress="store.address + ', <br>' + store.city + ' ' + store.state + ' ' + store.postal_code"  :storeHour=closingTime(store) :storeLong="store.longitude" :storeLat="store.latitude" storePhone='123-456-7890' :index="index"></singleStore>
         </div>
-        <div class="map">
+        <div class="map" v-show="mapToggle">
             <img class="map-image" src="" />
             <StoreModal ref="storeModal"></StoreModal>
+        </div>
+        <div class="mobile-nav">
+            <div class="mobile-nav-toggle list-toggle" :class="{'active' : !mapToggle}" @click="mapToggle = !mapToggle">List</div>
+            <div class="mobile-nav-toggle map-toggle" @click="mapToggle = !mapToggle" :class="{'active' : mapToggle}">Map</div>
         </div>
     </div>
 </template>
@@ -21,6 +25,7 @@
             return {
                 stores: [],
                 errors2: [],
+                mapToggle: false
             }
         },
         methods: {
@@ -65,8 +70,6 @@
                 this.sortDistance();
             },
             sortDistance: function() {
-                console.log(this.stores);
-
                 this.stores.sort(function(a, b) {
                     return a.distance - b.distance;
                 });
@@ -83,18 +86,32 @@
             this.getStores();
             let that = this;
             this.$on('open-modal', function(index) {
-                that.$refs.storeModal.showModal(that.stores[index]);
+                if(window.innerWidth < 415) {
+                    that.mapToggle = true;
+                    setTimeout(function() {
+                        that.$refs.storeModal.showModal(that.stores[index]);
+                    }, 100);
+                }
+                else {
+                    that.$refs.storeModal.showModal(that.stores[index]);
+                }
             });
+
+            this.$on('open-map', function() {
+                this.mapToggle = true;
+            })
         }
     }
 </script>
 
 <style lang="scss">
+    @import '../variables.scss';
     .store-locator{
         display: flex;
         height: 80vh;
         border: 1px solid #f5f5f5;
         box-shadow: 1px 1px 4px #eaeaea;
+        flex-wrap: wrap;
     }
     .store-list, .map {
         height: 100%;
@@ -115,5 +132,46 @@
     .store-modal .single-store__phone {
         display: inline-block;
     }
+
+    .mobile-nav {
+        display: none;
+    }
+
+    @media screen and (min-width: 415px) {
+        .map, .store-list {
+            display: block !important;
+        }
+    }
+
+    @media screen and (max-width: 414px) {
+        .store-locator {
+            height: 100%;
+            flex-direction: column;
+        }
+        .store-list, .map {
+            width: 100%;
+            height: 80%;
+            /*flex-grow: 1;*/
+        }
+        .store-list {
+            padding-bottom: 0;
+        }
+        .mobile-nav {
+            width: 100%;
+            height: 100px;
+            display: block;
+        }
+        .mobile-nav-toggle {
+            width: 50%;
+            padding-top: 20px;
+            padding-bottom: 20px;
+            float: left;
+            text-align: center;
+            &.active {
+                background: $brand-primary;
+            }
+        }
+    }
+
 
 </style>
