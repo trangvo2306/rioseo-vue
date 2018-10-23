@@ -25,7 +25,7 @@
             return {
                 stores: [],
                 errors2: [],
-                mapToggle: false
+                mapToggle: true
             }
         },
         methods: {
@@ -100,6 +100,10 @@
             this.$on('open-map', function() {
                 this.mapToggle = true;
             })
+
+            if (window.innerWidth < 415) {
+                this.mapToggle = false;
+            }
         }
     }
 </script>
@@ -123,6 +127,7 @@
         justify-content: center;
         align-items: center;
         overflow: hidden;
+        position: relative;
     }
     .store-list {
         overflow-x: hidden;
@@ -138,7 +143,7 @@
     }
 
     @media screen and (min-width: 415px) {
-        .map, .store-list {
+        .store-list {
             display: block !important;
         }
     }

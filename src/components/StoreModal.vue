@@ -73,6 +73,7 @@
         align-content: space-between;
         flex-direction: column;
         visibility: hidden;
+        padding: 20px;
     }
     .store-modal.open {
         visibility: visible;
@@ -115,8 +116,7 @@
 
     @media screen and (max-width: 414px) {
         .store-modal {
-            height: calc(80% - 40px);
-            padding: 20px;
+            height: calc(95% - 40px);
         }
     }
 </style>
